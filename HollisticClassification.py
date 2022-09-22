@@ -424,7 +424,6 @@ def send_landmark_class():
                     #print(frame)
 
                     height = Landmark(pose_world).distance('LEFT_EYE','RIGHT_HEEL','y')
-                    range = Landmark(pose_world).distance('LEFT_WRIST','RIGHT_WRIST','x')
 
                     height_sum.append(height)
                     print('height',height)
@@ -442,7 +441,7 @@ def send_landmark_class():
                 left_wrist = Landmark(pose_norm).data('LEFT_WRIST')
                 right_wrist = Landmark(pose_norm).data('RIGHT_WRIST')
                 av_position = Landmark(pose_norm).average()
-                print(av_position)
+                #print(av_position)
                 
                 # w.r.t world
                 # Average hegiht of hands
@@ -462,11 +461,16 @@ def send_landmark_class():
                 beta = (180/pi)*atan2(x_b,y_b)
                 angles = [alpha,beta]
 
+                # Calculate height
+                height_world = Landmark(pose_world).distance('LEFT_EYE','LEFT_ANKLE','y')
+
+
                 # Send OSC landmark data 
                 SendOSC().landmark_data(left_wrist,9900)
                 SendOSC().landmark_data(right_wrist,8900)
                 SendOSC().landmark_data(lh,9500)
                 SendOSC().landmark_data(rh,8500)
+                SendOSC().data('Height',height_world,7000)
                 SendOSC().data('Average_position', av_position, 6000)
                 SendOSC().data('Hand height',av_hand_height,4000)
                 SendOSC().data('Hand depth',av_hand_depth,3000)
